@@ -1,7 +1,9 @@
 <img src="images/sunset.jpg" alt="" width="375" height="200" class="sign-up__banner" />
 @if (hasSubmitted()) {
   <div class="sign-up__success">
-    <h1 #successHeading tabindex="-1" class="sign-up__heading">Thank you for signing up</h1>
+    <h1 #successHeading tabindex="-1" class="sign-up__heading" data-testid="success-heading">
+      Thank you for signing up
+    </h1>
     <p class="sign-up__confirmation">We'll keep you updated with our latest products.</p>
   </div>
 } @else {

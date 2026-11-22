@@ -50,4 +50,50 @@ describe('SignUp', () => {
       'Enter your email address in the correct format, like name@example.com',
     );
   });
+
+  it('should focus the first invalid field when an empty form is submitted', async () => {
+    const button = fixture.nativeElement.querySelector(
+      'button[type="submit"]',
+    ) as HTMLButtonElement;
+    button.click();
+    await fixture.whenStable();
+
+    const firstNameInput = fixture.nativeElement.querySelector('#firstName');
+    const successEl = fixture.debugElement.query(By.css('[data-testid="success-heading"]'));
+
+    expect(document.activeElement).toBe(firstNameInput);
+    expect(firstNameInput.getAttribute('aria-invalid')).toBe('true');
+    expect(successEl).toBeFalsy();
+  });
+
+  it('should show the success message when a valid form is submitted', async () => {
+    const fields = [
+      {
+        field: fixture.nativeElement.querySelector('#firstName') as HTMLInputElement,
+        value: 'First',
+      },
+      {
+        field: fixture.nativeElement.querySelector('#lastName') as HTMLInputElement,
+        value: 'Last',
+      },
+      {
+        field: fixture.nativeElement.querySelector('#emailAddress') as HTMLInputElement,
+        value: 'name@example.com',
+      },
+    ];
+    fields.forEach((fieldObj) => {
+      fieldObj.field.value = fieldObj.value;
+      fieldObj.field.dispatchEvent(new Event('input'));
+    });
+    await fixture.whenStable();
+
+    const button = fixture.nativeElement.querySelector(
+      'button[type="submit"]',
+    ) as HTMLButtonElement;
+    button.click();
+    await fixture.whenStable();
+
+    const successEl = fixture.debugElement.query(By.css('[data-testid="success-heading"]'));
+    expect(successEl).toBeTruthy();
+  });
 });
