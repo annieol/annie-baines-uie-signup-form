@@ -62,3 +62,22 @@
     color: $colour-white;
   }
 }
+
+@media (min-width: $breakpoint-desktop) {
+  :host {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: $spacing-lg;
+    border-radius: $border-radius;
+    max-width: $content-max-width;
+    height: auto;
+    padding: $spacing-lg;
+    margin: $spacing-lg auto 0;
+    background-color: $colour-white;
+  }
+
+  .sign-up__banner {
+    border-radius: $border-radius;
+    height: 500px;
+  }
+}

@@ -22,3 +22,14 @@ body {
     sans-serif;
   color: $colour-navy;
 }
+
+@media (min-width: $breakpoint-desktop) {
+  body {
+    background-color: $colour-peach;
+  }
+}
+
+:focus-visible {
+  outline: 3px solid $colour-navy;
+  outline-offset: 2px;
+}

@@ -5,8 +5,8 @@
     <p class="sign-up__confirmation">We'll keep you updated with our latest products.</p>
   </div>
 } @else {
-  <h1 class="sign-up__heading">Stay Updated</h1>
   <form [formRoot]="signUpForm" class="sign-up__form">
+    <h1 class="sign-up__heading">Stay Updated</h1>
     @for (fieldConfig of signUpFields; track fieldConfig.name) {
       <div class="sign-up__field">
         @let fieldName = fieldConfig.name;
