@@ -1,6 +1,5 @@
 import { delay, http, HttpResponse } from 'msw';
-
-export const SIGN_UP_URL = '/api/sign-ups';
+import { SIGN_UP_URL } from '../app/api/endpoints.constants';
 
 export const handlers = [
   http.post(SIGN_UP_URL, async () => {

@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Service } from '@angular/core';
 import { SignUpModel } from '../sign-up/sign-up.model';
-import { SIGN_UP_URL } from '../../mocks/handlers';
+import { SIGN_UP_URL } from '../api/endpoints.constants';
 
 @Service()
 export class SignUpService {
