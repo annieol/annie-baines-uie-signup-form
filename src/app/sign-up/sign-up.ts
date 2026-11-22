@@ -10,6 +10,8 @@ import {
 import { SignUpModel } from './sign-up.model';
 import { email, form, FormField, FormRoot, required } from '@angular/forms/signals';
 import { SignUpFields } from './sign-up.config';
+import { firstValueFrom } from 'rxjs';
+import { SignUpService } from '../services/sign-up.service';
 
 @Component({
   imports: [FormField, FormRoot],
@@ -18,15 +20,17 @@ import { SignUpFields } from './sign-up.config';
   templateUrl: './sign-up.html',
 })
 export class SignUp {
+  private readonly signUpService = inject(SignUpService);
   private readonly injector = inject(Injector);
   private readonly successHeading = viewChild<ElementRef<HTMLHeadingElement>>('successHeading');
 
-  signUpModel = signal<SignUpModel>({ firstName: '', lastName: '', emailAddress: '' });
-  signUpFields = SignUpFields;
+  private signUpModel = signal<SignUpModel>({ firstName: '', lastName: '', emailAddress: '' });
+  readonly signUpFields = SignUpFields;
 
   hasSubmitted = signal(false);
+  submitError = signal(false);
 
-  signUpForm = form(
+  readonly signUpForm = form(
     this.signUpModel,
     (path) => {
       required(path.firstName, { message: 'Enter your first name' });
@@ -38,7 +42,14 @@ export class SignUp {
     },
     {
       submission: {
-        action: async () => {
+        action: async (form) => {
+          this.submitError.set(false);
+          try {
+            await firstValueFrom(this.signUpService.signUp(form().value()));
+          } catch {
+            this.submitError.set(true);
+            return;
+          }
           this.hasSubmitted.set(true);
           afterNextRender(() => this.successHeading()?.nativeElement.focus(), {
             injector: this.injector,
