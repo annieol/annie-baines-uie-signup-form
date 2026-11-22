@@ -1,1 +1,13 @@
-<p>sign-up works!</p>
+<form [formRoot]="signUpForm">
+  @for (fieldConfig of signUpFields; track fieldConfig.name) {
+    @let fieldName = fieldConfig.name;
+
+    <label [for]="fieldName">{{ fieldConfig.label }}</label>
+    <input
+      [formField]="signUpForm[fieldName]"
+      [id]="fieldName"
+      [type]="fieldConfig.type"
+      [autocomplete]="fieldConfig.autocomplete"
+    />
+  }
+</form>
