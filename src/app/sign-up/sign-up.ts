@@ -13,12 +13,26 @@ export class SignUp {
   signUpModel = signal<SignUpModel>({ firstName: '', lastName: '', emailAddress: '' });
   signUpFields = SignUpFields;
 
-  signUpForm = form(this.signUpModel, (path) => {
-    required(path.firstName, { message: 'Enter your first name' });
-    required(path.lastName, { message: 'Enter your last name' });
-    required(path.emailAddress, { message: 'Enter your email address' });
-    email(path.emailAddress, {
-      message: 'Enter your email address in the correct format, like name@example.com',
-    });
-  });
+  hasSubmitted = signal(false);
+
+  signUpForm = form(
+    this.signUpModel,
+    (path) => {
+      required(path.firstName, { message: 'Enter your first name' });
+      required(path.lastName, { message: 'Enter your last name' });
+      required(path.emailAddress, { message: 'Enter your email address' });
+      email(path.emailAddress, {
+        message: 'Enter your email address in the correct format, like name@example.com',
+      });
+    },
+    {
+      submission: {
+        action: async () => this.hasSubmitted.set(true),
+        onInvalid: (field) => {
+          const firstError = field().errorSummary()[0];
+          firstError?.fieldTree().focusBoundControl();
+        },
+      },
+    },
+  );
 }

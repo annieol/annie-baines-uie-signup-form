@@ -1,22 +1,30 @@
-<form [formRoot]="signUpForm">
-  @for (fieldConfig of signUpFields; track fieldConfig.name) {
-    @let fieldName = fieldConfig.name;
-    @let field = signUpForm[fieldName];
-    @let fieldInvalid = field().touched() && field().invalid();
-    @let errorId = fieldName + '-error';
+@if (hasSubmitted()) {
+  <h1>Thank you for signing up</h1>
+  <p>We'll keep you updated with our latest products.</p>
+} @else {
+  <h1>Stay Updated</h1>
+  <form [formRoot]="signUpForm">
+    @for (fieldConfig of signUpFields; track fieldConfig.name) {
+      @let fieldName = fieldConfig.name;
+      @let field = signUpForm[fieldName];
+      @let fieldInvalid = field().touched() && field().invalid();
+      @let errorId = fieldName + '-error';
 
-    <label [for]="fieldName">{{ fieldConfig.label }}</label>
-    <input
-      [formField]="signUpForm[fieldName]"
-      [id]="fieldName"
-      [type]="fieldConfig.type"
-      [autocomplete]="fieldConfig.autocomplete"
-      [aria-invalid]="fieldInvalid"
-      [aria-describedby]="fieldInvalid ? errorId : null"
-    />
+      <label [for]="fieldName">{{ fieldConfig.label }}</label>
+      <input
+        [formField]="signUpForm[fieldName]"
+        [id]="fieldName"
+        [type]="fieldConfig.type"
+        [autocomplete]="fieldConfig.autocomplete"
+        [aria-invalid]="fieldInvalid"
+        [aria-describedby]="fieldInvalid ? errorId : null"
+      />
 
-    @if (fieldInvalid) {
-      <p [id]="errorId">{{ field().errors()[0]?.message }}</p>
+      @if (fieldInvalid) {
+        <p [id]="errorId">{{ field().errors()[0]?.message }}</p>
+      }
     }
-  }
-</form>
+
+    <button type="submit">Sign up</button>
+  </form>
+}
