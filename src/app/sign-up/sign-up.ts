@@ -1,4 +1,12 @@
-import { Component, signal } from '@angular/core';
+import {
+  afterNextRender,
+  Component,
+  ElementRef,
+  inject,
+  Injector,
+  signal,
+  viewChild,
+} from '@angular/core';
 import { SignUpModel } from './sign-up.model';
 import { email, form, FormField, FormRoot, required } from '@angular/forms/signals';
 import { SignUpFields } from './sign-up.config';
@@ -10,6 +18,9 @@ import { SignUpFields } from './sign-up.config';
   templateUrl: './sign-up.html',
 })
 export class SignUp {
+  private readonly injector = inject(Injector);
+  private readonly successHeading = viewChild<ElementRef<HTMLHeadingElement>>('successHeading');
+
   signUpModel = signal<SignUpModel>({ firstName: '', lastName: '', emailAddress: '' });
   signUpFields = SignUpFields;
 
@@ -27,7 +38,12 @@ export class SignUp {
     },
     {
       submission: {
-        action: async () => this.hasSubmitted.set(true),
+        action: async () => {
+          this.hasSubmitted.set(true);
+          afterNextRender(() => this.successHeading()?.nativeElement.focus(), {
+            injector: this.injector,
+          });
+        },
         onInvalid: (field) => {
           const firstError = field().errorSummary()[0];
           firstError?.fieldTree().focusBoundControl();
