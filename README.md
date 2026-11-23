@@ -1,59 +1,49 @@
-# AnnieBainesUieSignupForm
+# Sign-Up Form
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 22.2.4.
+A sign-up form for receiving marketing updates, built with Angular 22.
 
-## Development server
-
-To start a local development server, run:
+## Getting started
 
 ```bash
-ng serve
+npm install
+npm start
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+Navigate to `http://localhost:4200/`.
 
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+## Running tests
 
 ```bash
-ng generate component component-name
+npm test
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+## Mock API
 
-```bash
-ng generate --help
-```
+The sign-up endpoint (`POST /api/sign-ups`) is mocked with MSW and returns a `200` response after a short delay, so the pending state is visible. The mock only runs in development (`src/mocks/`) and isn't included in production builds. You can see the request in the browser's Network tab.
 
-## Building
+## Decisions
 
-To build the project run:
+- **Signal forms** - less boilerplate than reactive forms, error messages are coupled with validators, and signals are the modern approach to reactivity in Angular.
+- **MSW (Mock Service Worker)** - intercepts requests at the network level, so the service and HttpClient work exactly as they would against a real API, without needing a separate server. The user runs `npm start` and everything works.
+- **BEM** - although Angular encapsulates component styles, BEM provides readable class names and reduces the risk of clashes with global styles if the app is extended.
+- **Accessibility** - fields have associated labels, error messages are linked with `aria-describedby` and `aria-invalid`. On an invalid submit, focus moves to the first invalid field, so screen readers announce its label and error. On a successful submit, focus moves to the confirmation heading. Tested with VoiceOver.
+- **Extensibility** - fields are rendered from a config array, so adding a question means adding a config entry and a validator.
+- **Responsive design** - I took a mobile first approach with a single desktop breakpoint at 1024px.
 
-```bash
-ng build
-```
+## Assumptions
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+- All fields are required.
+- The form is a single page with no routing needed.
+- Marketing consent (e.g. a checkbox with legal wording) would be required before launch — listed as a next step rather than assuming the wording.
 
-## Running unit tests
+## AI use
 
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
+I used Claude to help plan the project, define the accessibility requirements and decide what to test. I also used it to review my code after writing it. Where it drafted code, including some of the tests, I reviewed and adapted it myself.
 
-```bash
-ng test
-```
+## Next steps
 
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+- Marketing consent checkbox with legal wording
+- Reusable field component per input type
+- Routing and additional pages
+- Move form schema to a separate file
+- Playwright end-to-end tests
