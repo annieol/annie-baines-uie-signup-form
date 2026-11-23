@@ -1,6 +1,6 @@
 # Sign-Up Form
 
-A sign-up form for receiving marketing updates, built with Angular 22.
+A sign-up form for receiving marketing updates, built with Angular 22. Requires Requires Node 20.11 or later.
 
 ## Getting started
 
