@@ -34,6 +34,10 @@
       </div>
     }
 
+    @if (submitError()) {
+      <p role="alert" class="sign-up__error">Something went wrong. Please try again.</p>
+    }
+
     <button type="submit" class="sign-up__button">
       {{ signUpForm().submitting() ? 'Signing up…' : 'Sign up' }}
     </button>

@@ -1,10 +1,48 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { SignUp } from './sign-up';
 import { By } from '@angular/platform-browser';
+import { http, HttpResponse } from 'msw';
+import { setupServer } from 'msw/node';
+import { handlers } from '../../mocks/handlers';
+import { SIGN_UP_URL } from '../api/endpoints.constants';
+
+const server = setupServer(...handlers);
 
 describe('SignUp', () => {
   let component: SignUp;
   let fixture: ComponentFixture<SignUp>;
+
+  beforeAll(() => server.listen());
+  afterEach(() => server.resetHandlers());
+  afterAll(() => server.close());
+
+  async function submitValidForm() {
+    const fields = [
+      {
+        field: fixture.nativeElement.querySelector('#firstName') as HTMLInputElement,
+        value: 'First',
+      },
+      {
+        field: fixture.nativeElement.querySelector('#lastName') as HTMLInputElement,
+        value: 'Last',
+      },
+      {
+        field: fixture.nativeElement.querySelector('#emailAddress') as HTMLInputElement,
+        value: 'name@example.com',
+      },
+    ];
+    fields.forEach((fieldObj) => {
+      fieldObj.field.value = fieldObj.value;
+      fieldObj.field.dispatchEvent(new Event('input'));
+    });
+    await fixture.whenStable();
+
+    const button = fixture.nativeElement.querySelector(
+      'button[type="submit"]',
+    ) as HTMLButtonElement;
+    button.click();
+    await fixture.whenStable();
+  }
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -67,33 +105,20 @@ describe('SignUp', () => {
   });
 
   it('should show the success message when a valid form is submitted', async () => {
-    const fields = [
-      {
-        field: fixture.nativeElement.querySelector('#firstName') as HTMLInputElement,
-        value: 'First',
-      },
-      {
-        field: fixture.nativeElement.querySelector('#lastName') as HTMLInputElement,
-        value: 'Last',
-      },
-      {
-        field: fixture.nativeElement.querySelector('#emailAddress') as HTMLInputElement,
-        value: 'name@example.com',
-      },
-    ];
-    fields.forEach((fieldObj) => {
-      fieldObj.field.value = fieldObj.value;
-      fieldObj.field.dispatchEvent(new Event('input'));
-    });
-    await fixture.whenStable();
-
-    const button = fixture.nativeElement.querySelector(
-      'button[type="submit"]',
-    ) as HTMLButtonElement;
-    button.click();
-    await fixture.whenStable();
+    await submitValidForm();
 
     const successEl = fixture.debugElement.query(By.css('[data-testid="success-heading"]'));
     expect(successEl).toBeTruthy();
+  });
+
+  it('should show an error message when the sign up request fails', async () => {
+    server.use(http.post(SIGN_UP_URL, () => new HttpResponse(null, { status: 500 })));
+
+    await submitValidForm();
+
+    const errorEl = fixture.nativeElement.querySelector('[role="alert"]');
+    const successEl = fixture.debugElement.query(By.css('[data-testid="success-heading"]'));
+    expect(errorEl?.textContent).toContain('Something went wrong. Please try again.');
+    expect(successEl).toBeFalsy();
   });
 });
