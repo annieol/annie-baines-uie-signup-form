@@ -1,0 +1,83 @@
+@use '../../styles/_variables' as *;
+
+.sign-up {
+  &__success,
+  &__form,
+  &__field {
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__success,
+  &__form {
+    width: 80%;
+    gap: $spacing-md;
+    margin: auto;
+  }
+
+  &__banner {
+    width: 100%;
+    object-fit: cover;
+    object-position: center 20%;
+  }
+
+  &__heading {
+    font-size: $font-size-lg;
+    text-align: center;
+    margin: $spacing-md 0 0;
+  }
+
+  &__label {
+    margin-bottom: $spacing-sm;
+  }
+
+  &__input,
+  &__button {
+    font: inherit;
+    padding: $spacing-sm;
+    border-radius: $border-radius;
+    border: 1px solid $colour-blue;
+  }
+
+  &__input {
+    color: $colour-black;
+  }
+
+  &__input--error {
+    background-color: $colour-peach;
+    border: 1px solid $colour-red;
+  }
+
+  &__error {
+    color: $colour-red;
+    margin-top: $spacing-xs;
+  }
+
+  &__confirmation {
+    text-align: center;
+  }
+
+  &__button {
+    background-color: $colour-blue;
+    color: $colour-white;
+  }
+}
+
+@media (min-width: $breakpoint-desktop) {
+  :host {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: $spacing-lg;
+    border-radius: $border-radius;
+    max-width: $content-max-width;
+    height: auto;
+    padding: $spacing-lg;
+    margin: $spacing-lg auto 0;
+    background-color: $colour-white;
+  }
+
+  .sign-up__banner {
+    border-radius: $border-radius;
+    height: 500px;
+  }
+}

@@ -1,0 +1,41 @@
+<img src="images/sunset.jpg" alt="" width="375" height="200" class="sign-up__banner" />
+@if (hasSubmitted()) {
+  <div class="sign-up__success">
+    <h1 #successHeading tabindex="-1" class="sign-up__heading" data-testid="success-heading">
+      Thank you for signing up
+    </h1>
+    <p class="sign-up__confirmation">We'll keep you updated with our latest products.</p>
+  </div>
+} @else {
+  <form [formRoot]="signUpForm" class="sign-up__form">
+    <h1 class="sign-up__heading">Stay Updated</h1>
+    @for (fieldConfig of signUpFields; track fieldConfig.name) {
+      <div class="sign-up__field">
+        @let fieldName = fieldConfig.name;
+        @let field = signUpForm[fieldName];
+        @let fieldInvalid = field().touched() && field().invalid();
+        @let errorId = fieldName + '-error';
+
+        <label [for]="fieldName" class="sign-up__label">{{ fieldConfig.label }}</label>
+        <input
+          [formField]="signUpForm[fieldName]"
+          [id]="fieldName"
+          [type]="fieldConfig.type"
+          [autocomplete]="fieldConfig.autocomplete"
+          [aria-invalid]="fieldInvalid"
+          [aria-describedby]="fieldInvalid ? errorId : null"
+          class="sign-up__input"
+          [class.sign-up__input--error]="fieldInvalid"
+        />
+
+        @if (fieldInvalid) {
+          <p [id]="errorId" class="sign-up__error">{{ field().errors()[0]?.message }}</p>
+        }
+      </div>
+    }
+
+    <button type="submit" class="sign-up__button">
+      {{ signUpForm().submitting() ? 'Signing up…' : 'Sign up' }}
+    </button>
+  </form>
+}

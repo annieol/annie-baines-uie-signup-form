@@ -1,12 +1,10 @@
-import { Component, signal } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { Component } from '@angular/core';
+import { SignUp } from './sign-up/sign-up';
 
 @Component({
-  imports: [RouterOutlet],
+  imports: [SignUp],
   selector: 'app-root',
   styleUrl: './app.scss',
   templateUrl: './app.html',
 })
-export class App {
-  protected readonly title = signal('annie-baines-uie-signup-form');
-}
+export class App {}
